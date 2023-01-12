@@ -21,23 +21,23 @@
             fill="white"
           />
         </svg>
-        <span class="text-2xl font-semibold text-gray-700">V-Dashboard</span>
+        <span class="text-2xl font-semibold text-gray-700">Course Admin Dashboard</span>
       </div>
 
       <form class="mt-4" @submit.prevent="login">
         <label class="block">
-          <span class="text-sm text-gray-700">Email</span>
+          <span class="text-sm text-gray-700">Course name</span>
           <input
-            type="email"
+            type="text"
             class="block w-full mt-1 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
-            v-model="email"
+            v-model="text"
           />
         </label>
 
         <label class="block mt-3">
-          <span class="text-sm text-gray-700">Password</span>
+          <span class="text-sm text-gray-700">Access key</span>
           <input
-            type="password"
+            type="text"
             class="block w-full mt-1 border-gray-200 rounded-md focus:border-indigo-600 focus:ring focus:ring-opacity-40 focus:ring-indigo-500"
             v-model="password"
           />
@@ -73,15 +73,47 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from "vue";
+<script setup >
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import {database} from "../supabase.js"
+import { faArrowLeftRotate } from "@fortawesome/free-solid-svg-icons";
 
 const router = useRouter();
-const email = ref("johndoe@mail.com");
-const password = ref("@#!@#asdf1231!_!@#");
+const text = ref("mech");
+const password = ref("1234");
+const str = ref("");
+const str2 = ref("");
 
-function login() {
-  router.push("/dashboard");
+
+const login = async() => {
+  try{
+    const { data, error } = await database
+  .from('course')
+  .select('*')
+
+  str.value = data.filter((x)=> x.access_code === password.value)
+  str2.value = data.filter((x)=> x.name === text.value)
+
+  console.log(str.value)
+
+  if(str.value.length > 0 && str2.value.length > 0 ){
+    router.push('/dashboard')
+  } else {
+    alert("wrong username or password. Try again please")
+  }
+  }
+  catch(error) {
+    alert("error: "+error.message)
+
 }
+}
+
+onMounted(()=>{
+  text.value = localStorage.getItem("@course_name") ;
+  password.value = localStorage.getItem("@access_key") ;
+  console.log("mounted home");
+});
+
+
 </script>
