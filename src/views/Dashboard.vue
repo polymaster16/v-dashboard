@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 class="text-3xl font-bold text-gray-700">Course Name</h3>
+    <h3 class="text-3xl font-bold text-gray-700">{{course.name}}</h3>
 
     <div class="mt-4">
       <div class="flex flex-wrap -mx-6">
@@ -14,7 +14,7 @@
             </div>
 
             <div class="mx-5">
-              <h4 class="text-2xl font-semibold text-gray-700">89</h4>
+              <h4 class="text-2xl font-semibold text-gray-700">{{course.population}}</h4>
               <div class="text-gray-500">Enrolled students</div>
             </div>
           </div>
@@ -30,7 +30,7 @@
             </div>
 
             <div class="mx-5">
-              <h4 class="text-2xl font-semibold text-gray-700">75%</h4>
+              <h4 class="text-2xl font-semibold text-gray-700">{{course.attendance}}%</h4>
               <div class="text-gray-500">Percentage Attendance</div>
             </div>
           </div>
@@ -63,136 +63,50 @@
             </div>
 
             <div class="mx-5">
-              <h4 class="text-2xl font-semibold text-gray-700">215,542</h4>
-              <div class="text-gray-500">Available Products</div>
+              <h4 class="text-2xl font-semibold text-gray-700">{{course.population}}</h4>
+              <div class="text-gray-500">Other stats</div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="mt-8"></div>
-
-    <div class="flex flex-col mt-8">
-      <div class="py-2 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <div
-          class="inline-block min-w-full overflow-hidden align-middle border-b border-gray-200 shadow sm:rounded-lg"
-        >
-          <table class="min-w-full">
-            <thead>
-              <tr>
-                <th
-                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
-                >
-                  Name
-                </th>
-                <th
-                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
-                >
-                  Title
-                </th>
-                <th
-                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
-                >
-                  Status
-                </th>
-                <th
-                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
-                >
-                  Role
-                </th>
-                <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
-              </tr>
-            </thead>
-
-            <tbody class="bg-white">
-              <tr v-for="(u, index) in users" :key="index">
-                <td
-                  class="px-6 py-4 border-b border-gray-200 whitespace-nowrap"
-                >
-                  <div class="flex items-center">
-                    <div class="flex-shrink-0 w-10 h-10">
-                      <img
-                        class="w-10 h-10 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
-                      />
-                    </div>
-
-                    <div class="ml-4">
-                      <div class="text-sm font-medium leading-5 text-gray-900">
-                        {{ u.name }}
-                      </div>
-                      <div class="text-sm leading-5 text-gray-500">
-                        {{ u.email }}
-                      </div>
-                    </div>
-                  </div>
-                </td>
-
-                <td
-                  class="px-6 py-4 border-b border-gray-200 whitespace-nowrap"
-                >
-                  <div class="text-sm leading-5 text-gray-900">
-                    {{ u.title }}
-                  </div>
-                  <div class="text-sm leading-5 text-gray-500">
-                    {{ u.title2 }}
-                  </div>
-                </td>
-
-                <td
-                  class="px-6 py-4 border-b border-gray-200 whitespace-nowrap"
-                >
-                  <span
-                    class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full"
-                    >{{ u.status }}</span
-                  >
-                </td>
-
-                <td
-                  class="px-6 py-4 text-sm leading-5 text-gray-500 border-b border-gray-200 whitespace-nowrap"
-                >
-                  {{ u.role }}
-                </td>
-
-                <td
-                  class="px-6 py-4 text-sm font-medium leading-5 text-right border-b border-gray-200 whitespace-nowrap"
-                >
-                  <a href="#" class="text-indigo-600 hover:text-indigo-900"
-                    >Edit</a
-                  >
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div class="mt-8">
     </div>
-  </div>
+
+    
+    </div>
+ 
 </template>
 
-<script setup lang="ts">
-import { ref } from "vue";
-import Header from "../components/Header.vue"
+<script setup >
+import { reactive, onMounted } from "vue";
+import {database} from "../supabase.js"
 
-interface User {
-  name: string;
-  email: string;
-  title: string;
-  title2: string;
-  status: string;
-  role: string;
+const course = reactive({
+  name:"You're not Logged in",
+  population:0,
+  attendance:0,
+})
+
+const getCourse= async() =>{
+  try {
+    const {data, error} = await database
+  .from('course')
+  .select()
+  .eq('name', course.name)
+
+  console.log("courses fetched successfully");
+  console.log(data);
+  course.population = data[0].population;
+  course.attendance =data[0].percentage_attendance;
+  } catch (error) {
+    console.warn(error.message)
+  }
 }
-
-const testUser: User = {
-  name: "John Doe",
-  email: "john@example.com",
-  title: "Software Engineer",
-  title2: "Web dev",
-  status: "Active",
-  role: "Owner",
-};
-
-const users = ref<User[]>([...Array(10).keys()].map(() => testUser));
+  onMounted(()=>{
+  course.name = localStorage.getItem("@course_name") ;
+  getCourse();
+  console.log("mounted home");
+});
 </script>

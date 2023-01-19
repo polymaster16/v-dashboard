@@ -16,15 +16,15 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faUserSecret, faHouseUser, faChartPie, faMugSaucer, faChartSimple,
     faHippo, faClipboardUser, faClock, faAddressBook, faGraduationCap } from '@fortawesome/free-solid-svg-icons'
 
-import { faHandshake} from '@fortawesome/free-regular-svg-icons'
-
+import { faHandshake, faCalendarCheck} from '@fortawesome/free-regular-svg-icons'
+import PrimeVue from 'primevue/config';
 
 const app = createApp(App);
 
 /* add icons to the library */
 library.add(faUserSecret,faHouseUser,faHippo,faHandshake,
     faClipboardUser, faClock, faAddressBook,faChartPie,
-     faMugSaucer, faGraduationCap, faChartSimple)
+     faMugSaucer, faGraduationCap, faChartSimple, faCalendarCheck)
 
 /* add font awesome icon component */
 app.component('font-awesome-icon', FontAwesomeIcon)
@@ -32,5 +32,8 @@ app.component('font-awesome-icon', FontAwesomeIcon)
 app.component('default-layout', DashboardLayout);
 app.component('empty-layout', EmptyLayout);
 
+app.use(PrimeVue);
+//app.use(vuetify);
 app.use(router);
+
 app.mount('#app');

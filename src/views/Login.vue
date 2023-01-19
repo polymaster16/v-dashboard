@@ -98,6 +98,8 @@ const login = async() => {
   console.log(str.value)
 
   if(str.value.length > 0 && str2.value.length > 0 ){
+    localStorage.setItem('@course_name', text.value)
+    localStorage.setItem('@access_key', password.value)
     router.push('/dashboard')
   } else {
     alert("wrong username or password. Try again please")
